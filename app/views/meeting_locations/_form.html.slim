@@ -1,0 +1,22 @@
+= simple_form_for @meeting_location, :html => { :class => "form-horizontal" } do |f|
+  = f.input :name
+  = error_span(@meeting_location[:name])
+  = f.input :address1
+  = error_span(@meeting_location[:address1])
+  = f.input :address2
+  = error_span(@meeting_location[:address2])
+  = f.input :city
+  = error_span(@meeting_location[:city])
+  = f.input :state
+  = error_span(@meeting_location[:state])
+  = f.input :postal_code
+  = error_span(@meeting_location[:postal_code])
+  = f.input :latitude
+  = error_span(@meeting_location[:latitude])
+  = f.input :longitude
+  = error_span(@meeting_location[:longitude])
+  = f.input :notes
+  = error_span(@meeting_location[:notes])
+  = f.button :submit, :class => 'btn-primary'
+  '
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), meeting_locations_path, :class => 'btn btn-default'

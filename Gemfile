@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
-
+gem 'bootstrap-sass', '~> 3.3.5'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'dalli'
 gem 'devise'
 gem 'draper'
+gem 'geocoder'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'kgio'
@@ -19,6 +20,7 @@ gem 'slim-rails'
 gem 'sqlite3'
 gem 'therubyracer'
 gem 'turbolinks'
+gem 'twitter-bootstrap-rails'
 gem 'uglifier', '>= 1.3.0'
 
 group :development, :test do
@@ -39,7 +41,7 @@ group :development, :test do
   gem 'rspec-activejob'
   gem 'rspec-rails'
   gem 'rspec_api_documentation'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', require: false
   gem 'smart_rspec'
   gem 'spring'
   gem 'spring-commands-cucumber'

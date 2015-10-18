@@ -1,9 +1,20 @@
 import React from 'react';
+import {Navbar, NavBrand, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap'
 
-class Users extends React.Component {
+window.bootstrap = require('react-bootstrap')
+
+class App extends React.Component {
   render() {
-    return <div>Hello World</div>;
+    return <div>
+      <Navbar>
+        <NavBrand>Next Meeting</NavBrand>
+        <Nav>
+          <NavItem eventKey={1} href="#">Find the NEXTmeeting!</NavItem>
+        </Nav>
+      </Navbar>
+      { this.props.children }
+    </div>;
   }
 }
 
-export default Users;
+export default App;

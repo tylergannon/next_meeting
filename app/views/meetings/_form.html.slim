@@ -1,0 +1,12 @@
+= simple_form_for @meeting, :html => { :class => "form-horizontal" } do |f|
+  = f.input :meeting_location_id
+  = error_span(@meeting[:meeting_location_id])
+  = f.input :meeting_group_id
+  = error_span(@meeting[:meeting_group_id])
+  = f.input :name
+  = error_span(@meeting[:name])
+  = f.input :start_time
+  = error_span(@meeting[:start_time])
+  = f.button :submit, :class => 'btn-primary'
+  '
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), meetings_path, :class => 'btn btn-default'
