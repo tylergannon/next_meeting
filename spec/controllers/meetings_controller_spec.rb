@@ -19,16 +19,42 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe MeetingsController, type: :controller do
+  render_views
 
-  # This should return the minimal set of attributes required to create a valid
-  # Meeting. As you add validations to Meeting, be sure to
-  # adjust the attributes here as well.
+  let(:meeting_location) {create :meeting_location}
+  let(:meeting_group)    {create :meeting_group}
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      meeting_location_id: meeting_location.id,
+      name: 'Bleeding Deacons',
+      start_time: '16:30',
+      weekday_ids: [Weekday.sunday.id],
+      meeting_group_id: meeting_group.id
+    }
+  }
+  let(:valid_attributes_with_location) {
+    {
+      name: 'Bleeding Deacons',
+      start_time: '16:30',
+      weekday_ids: [Weekday.sunday.id],
+      meeting_group_id: meeting_group.id,
+      location_attributes: {
+        name: 'A Church',
+        address1: '123 N. 8th St',
+        address2: 'Apt 1',
+        city: 'Brooklyn',
+        state: 'NY',
+        postal_code: '11249',
+        notes: 'Blah blah'
+      }
+    }
   }
 
+
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      name: ''
+    }
   }
 
   # This should return the minimal set of values that should be in the session
@@ -67,37 +93,49 @@ RSpec.describe MeetingsController, type: :controller do
     end
   end
 
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Meeting" do
-        expect {
-          post :create, {:meeting => valid_attributes}, valid_session
-        }.to change(Meeting, :count).by(1)
-      end
+  RSpec.shared_examples "Meeting Creation" do
+    describe "POST #create" do
+      context "with valid params" do
+        context "when meeting location was selected from list" do
+          it "creates a new Meeting" do
+            expect {
+              post :create, {:meeting => valid_attributes}, valid_session
+            }.to change(Meeting, :count).by(1)
+          end
 
-      it "assigns a newly created meeting as @meeting" do
-        post :create, {:meeting => valid_attributes}, valid_session
-        expect(assigns(:meeting)).to be_a(Meeting)
-        expect(assigns(:meeting)).to be_persisted
-      end
+          it "assigns a newly created meeting as @meeting" do
+            post :create, {:meeting => valid_attributes}, valid_session
+            expect(assigns(:meeting)).to be_a(Meeting)
+            expect(assigns(:meeting)).to be_persisted
+          end
 
-      it "redirects to the created meeting" do
-        post :create, {:meeting => valid_attributes}, valid_session
-        expect(response).to redirect_to(Meeting.last)
+          it "redirects to the created meeting" do
+            post :create, {:meeting => valid_attributes}, valid_session
+            expect(response).to redirect_to(Meeting.last)
+          end
+        end
+      end
+      context "with invalid params" do
+        it "assigns a newly created but unsaved meeting as @meeting" do
+          post :create, {:meeting => invalid_attributes}, valid_session
+          expect(assigns(:meeting)).to be_a_new(Meeting)
+        end
+
+        it "re-renders the 'new' template" do
+          post :create, {:meeting => invalid_attributes}, valid_session
+          expect(response).to render_template("new")
+        end
       end
     end
+  end
 
-    context "with invalid params" do
-      it "assigns a newly created but unsaved meeting as @meeting" do
-        post :create, {:meeting => invalid_attributes}, valid_session
-        expect(assigns(:meeting)).to be_a_new(Meeting)
-      end
+  describe "Creating a new meeting by selecting location from a list" do
+    it_behaves_like("Meeting Creation")
+  end
 
-      it "re-renders the 'new' template" do
-        post :create, {:meeting => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
-      end
-    end
+  describe "Creating a new meeting by typing in the address" do
+    let(:valid_attributes) {valid_attributes_with_location}
+    it_behaves_like("Meeting Creation")
   end
 
   describe "PUT #update" do

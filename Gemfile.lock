@@ -1,3 +1,20 @@
+GIT
+  remote: git://github.com/Compass/compass-rails.git
+  revision: d600de4a6c5870613aac63f32491da4771a3c982
+  branch: master
+  specs:
+    compass-rails (2.0.5)
+      compass (~> 1.0.0)
+      sass-rails (< 5.1)
+      sprockets (< 2.13)
+
+GIT
+  remote: git://github.com/thoughtbot/shoulda-matchers.git
+  revision: 7e976f15dd0f09d383377338a1ac5dc11d734153
+  specs:
+    shoulda-matchers (3.0.0)
+      activesupport (>= 4.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -64,6 +81,8 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
+    carmen (1.0.2)
+      activesupport (>= 3.0.0)
     celluloid (0.17.2)
       celluloid-essentials
       celluloid-extras
@@ -81,6 +100,12 @@ GEM
       timers (>= 4.1.1)
     celluloid-supervision (0.20.5)
       timers (>= 4.1.1)
+    chosen-rails (1.4.3)
+      coffee-rails (>= 3.2)
+      compass-rails (>= 2.0.4)
+      railties (>= 3.0)
+      sass-rails (>= 3.2)
+    chunky_png (1.3.4)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -90,6 +115,18 @@ GEM
       execjs
     coffee-script-source (1.9.1.1)
     colorize (0.7.7)
+    compass (1.0.3)
+      chunky_png (~> 1.2)
+      compass-core (~> 1.0.2)
+      compass-import-once (~> 1.0.5)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
+      sass (>= 3.3.13, < 3.5)
+    compass-core (1.0.3)
+      multi_json (~> 1.0)
+      sass (>= 3.3.0, < 3.5)
+    compass-import-once (1.0.5)
+      sass (>= 3.2, < 3.5)
     connection_pool (2.2.0)
     dalli (2.7.4)
     database_cleaner (1.5.1)
@@ -137,6 +174,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
+    hike (1.2.3)
     hitimes (1.2.3)
     i18n (0.7.0)
     jbuilder (2.3.2)
@@ -266,8 +304,6 @@ GEM
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
     shellany (0.0.1)
-    shoulda-matchers (3.0.0)
-      activesupport (>= 4.0.0)
     sidekiq (3.5.1)
       celluloid (~> 0.17.2)
       connection_pool (~> 2.2, >= 2.2.0)
@@ -295,8 +331,11 @@ GEM
       spring (>= 0.9.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
-    sprockets (3.4.0)
-      rack (> 1, < 3)
+    sprockets (2.12.4)
+      hike (~> 1.2)
+      multi_json (~> 1.0)
+      rack (~> 1.0)
+      tilt (~> 1.1, != 1.3.0)
     sprockets-rails (2.3.3)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
@@ -312,7 +351,7 @@ GEM
       ref
     thor (0.19.1)
     thread_safe (0.3.5)
-    tilt (2.0.1)
+    tilt (1.4.1)
     timers (4.1.1)
       hitimes
     turbolinks (2.5.3)
@@ -334,6 +373,9 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
+    with_advisory_lock (3.0.0)
+      activerecord (>= 3.2)
+      thread_safe
 
 PLATFORMS
   ruby
@@ -345,7 +387,10 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rails-console
   capistrano-rvm
+  carmen
+  chosen-rails
   coffee-rails (~> 4.1.0)
+  compass-rails!
   dalli
   database_cleaner
   devise
@@ -370,7 +415,7 @@ DEPENDENCIES
   rspec_api_documentation
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
-  shoulda-matchers
+  shoulda-matchers!
   sidekiq
   simple_form
   slim-rails
@@ -384,6 +429,7 @@ DEPENDENCIES
   twitter-bootstrap-rails
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
+  with_advisory_lock
 
 BUNDLED WITH
    1.10.6

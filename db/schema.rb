@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151018175242) do
+ActiveRecord::Schema.define(version: 20151018204911) do
 
   create_table "meeting_groups", force: :cascade do |t|
     t.string   "name"
@@ -44,5 +44,19 @@ ActiveRecord::Schema.define(version: 20151018175242) do
 
   add_index "meetings", ["meeting_group_id"], name: "index_meetings_on_meeting_group_id"
   add_index "meetings", ["meeting_location_id"], name: "index_meetings_on_meeting_location_id"
+
+  create_table "meetings_weekdays", force: :cascade do |t|
+    t.integer "meeting_id"
+    t.integer "weekday_id"
+  end
+
+  add_index "meetings_weekdays", ["meeting_id"], name: "index_meetings_weekdays_on_meeting_id"
+  add_index "meetings_weekdays", ["weekday_id"], name: "index_meetings_weekdays_on_weekday_id"
+
+  create_table "weekdays", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
 end

@@ -1,10 +1,14 @@
 source 'https://rubygems.org'
 
 gem 'bootstrap-sass', '~> 3.3.5'
+gem 'carmen'
+gem 'chosen-rails'
 gem 'coffee-rails', '~> 4.1.0'
+gem "compass-rails", github: "Compass/compass-rails", branch: "master"
 gem 'dalli'
 gem 'devise'
 gem 'draper'
+gem 'with_advisory_lock'
 gem 'geocoder'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
@@ -41,7 +45,7 @@ group :development, :test do
   gem 'rspec-activejob'
   gem 'rspec-rails'
   gem 'rspec_api_documentation'
-  gem 'shoulda-matchers', require: false
+  gem 'shoulda-matchers', github: 'thoughtbot/shoulda-matchers', require: false
   gem 'smart_rspec'
   gem 'spring'
   gem 'spring-commands-cucumber'

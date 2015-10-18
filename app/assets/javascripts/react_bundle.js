@@ -62,9 +62,7 @@
 
 	var _componentsHelloWorld2 = _interopRequireDefault(_componentsHelloWorld);
 
-	var _componentsHelloWorld3 = _interopRequireDefault(_componentsHelloWorld);
-
-	registerComponent('hello-world', _componentsHelloWorld3['default']);
+	registerComponent('hello-world', _componentsHelloWorld2['default']);
 	window.MyRoutes = _react2['default'].createElement(
 	  _reactRouter.Router,
 	  null,

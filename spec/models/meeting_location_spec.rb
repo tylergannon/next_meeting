@@ -13,4 +13,14 @@ RSpec.describe MeetingLocation, type: :model do
     subject {meeting_location.full_address}
     it {is_expected.to eq('2129 Crosspoint Ave Apt 23, Santa Rosa, CA, 95403')}
   end
+
+  describe "#geocode!" do
+    it "calls #geocode and then saves" do
+      aggregate_failures do
+        expect(subject).to receive(:geocode)
+        expect(subject).to receive(:save!)
+        subject.geocode!
+      end
+    end
+  end
 end

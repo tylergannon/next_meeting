@@ -1,12 +1,31 @@
 = simple_form_for @meeting, :html => { :class => "form-horizontal" } do |f|
-  = f.input :meeting_location_id
+  = f.input :meeting_location_id, collection: MeetingLocation.all, label_method: :search_display, value_method: :id, input_html: {class: 'chosen-select'}
   = error_span(@meeting[:meeting_location_id])
-  = f.input :meeting_group_id
+  = f.input :meeting_group_id, collection: MeetingGroup.all, label_method: :name, value_method: :id, input_html: {class: 'chosen-select'}
   = error_span(@meeting[:meeting_group_id])
   = f.input :name
   = error_span(@meeting[:name])
   = f.input :start_time
   = error_span(@meeting[:start_time])
+  = f.input :weekday_ids, collection: Weekday.all, label_method: :name, value_method: :id, input_html: {class: 'chosen-select', multiple: true, style: 'width: 400px;'}
+  = error_span(@meeting[:weekdays])
+  - if @meeting.new_record?
+    .well
+      = f.fields_for :location_attributes, @meeting.location do |ff|
+        = ff.input :name
+        = error_span(@meeting.location[:name])
+        = ff.input :address1
+        = error_span(@meeting.location[:address1])
+        = ff.input :address2
+        = error_span(@meeting.location[:address2])
+        = ff.input :city
+        = error_span(@meeting.location[:city])
+        = ff.input :state, collection: Carmen::Country.named('United States').subregions, label_method: :name, value_method: :code, input_html: {class: 'chosen-select'}
+        = error_span(@meeting.location[:state])
+        = ff.input :postal_code
+        = error_span(@meeting.location[:postal_code])
+        = ff.input :notes
+        = error_span(@meeting.location[:notes])
   = f.button :submit, :class => 'btn-primary'
   '
   = link_to t('.cancel', :default => t("helpers.links.cancel")), meetings_path, :class => 'btn btn-default'

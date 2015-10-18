@@ -27,7 +27,19 @@ require 'database_cleaner'
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
+  Shoulda::Matchers.configure do |config|
+    config.integrate do |with|
+      # Choose a test framework:
+      with.test_framework :rspec
 
+      # Choose one or more libraries:
+      with.library :active_record
+      with.library :active_model
+      with.library :action_controller
+      # Or, choose the following (which implies all of the above):
+      with.library :rails
+    end
+  end
 if ActiveRecord::Base.connection.class.name.demodulize == "SQLite3Adapter"
   class ActiveRecord::Base
     mattr_accessor :shared_connection
@@ -47,16 +59,24 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  DatabaseCleaner.strategy=(:truncation)
+  DatabaseCleaner.strategy= :deletion, {except: %w(weekdays)}
   config.around(:each) do |example|
     DatabaseCleaner.cleaning do
       example.run
     end
   end
 
+  config.before(:suite) do
+    Weekday.create name: 'Sunday'
+    Weekday.create name: 'Monday'
+    Weekday.create name: 'Tuesday'
+    Weekday.create name: 'Wednesday'
+    Weekday.create name: 'Thursday'
+    Weekday.create name: 'Friday'
+    Weekday.create name: 'Saturday'
+  end
+
   config.use_transactional_fixtures = false
   config.include FactoryGirl::Syntax::Methods
-  config.include Shoulda::Matchers::ActiveRecord
-
   config.infer_spec_type_from_file_location!
 end

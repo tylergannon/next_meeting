@@ -1,24 +1,12 @@
 - model_class = Meeting
 div class="page-header"
-  h1=t '.title', :default => model_class.model_name.human.titleize
+  h1=t '.title', :default => @meeting.name
+  - if @meeting.group
+    = link_to @meeting.group.name, @meeting.group
 
-p
-  strong= model_class.human_attribute_name(:meeting_location_id) + ':'
-  br
-  = @meeting.meeting_location_id
-p
-  strong= model_class.human_attribute_name(:meeting_group_id) + ':'
-  br
-  = @meeting.meeting_group_id
-p
-  strong= model_class.human_attribute_name(:name) + ':'
-  br
-  = @meeting.name
-p
-  strong= model_class.human_attribute_name(:start_time) + ':'
-  br
-  = @meeting.start_time
-
+.well
+  h3= "#{@meeting.formatted_days} at #{@meeting.formatted_start_time}"
+  = render @meeting.location
 = link_to t('.back', :default => t("helpers.links.back")), meetings_path, :class => 'btn btn-default'
 '
 = link_to t('.edit', :default => t("helpers.links.edit")), edit_meeting_path(@meeting), :class => 'btn btn-default'

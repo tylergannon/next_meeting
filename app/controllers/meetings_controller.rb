@@ -1,6 +1,6 @@
 class MeetingsController < ApplicationController
   before_action :set_meeting, only: [:show, :edit, :update, :destroy]
-  after_action :geocode_meeting_location, only: [:create, :update]
+  after_action :geocode_meeting_location, only: [:create, :update], if: :meeting_valid?
 
   # GET /meetings
   # GET /meetings.json
@@ -11,11 +11,13 @@ class MeetingsController < ApplicationController
   # GET /meetings/1
   # GET /meetings/1.json
   def show
+    @meeting = @meeting.decorate
   end
 
   # GET /meetings/new
   def new
     @meeting = Meeting.new
+    @meeting.build_location unless @meeting.location.present?
   end
 
   # GET /meetings/1/edit
@@ -32,6 +34,7 @@ class MeetingsController < ApplicationController
         format.html { redirect_to @meeting, notice: 'Meeting was successfully created.' }
         format.json { render :show, status: :created, location: @meeting }
       else
+        @meeting.build_location unless @meeting.location
         format.html { render :new }
         format.json { render json: @meeting.errors, status: :unprocessable_entity }
       end
@@ -70,10 +73,22 @@ class MeetingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def meeting_params
-      params.require(:meeting).permit(:meeting_location_id, :meeting_group_id, :name, :start_time)
+      if params[:meeting] && params[:meeting][:meeting_location_id].present?
+        params.require(:meeting).permit(:meeting_location_id, :meeting_group_id, :name, :start_time, weekday_ids: [])
+      else
+        params.require(:meeting).permit(:meeting_group_id, :name, :start_time, weekday_ids: [], location_attributes: [:name, :address1, :address2, :city, :state, :postal_code, :notes])
+      end
+    end
+
+    def meeting_location_params
+      params[:meeting].require(:location).permit(:name, :address1, :address2, :city, :state, :postal_code, :notes)
     end
 
     def geocode_meeting_location
       GeocodeLocationJob.perform_later @meeting.location
+    end
+
+    def meeting_valid?
+      @meeting.valid?
     end
 end
