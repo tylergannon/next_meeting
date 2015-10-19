@@ -7,6 +7,10 @@ RSpec.describe MeetingsController, type: :routing do
       expect(:get => "/meetings").to route_to("meetings#index")
     end
 
+    it "routes to #search" do
+      expect(get: "/meetings/search?foo=bar").to route_to("meetings#search", foo: 'bar')
+    end
+
     it "routes to #new" do
       expect(:get => "/meetings/new").to route_to("meetings#new")
     end

@@ -11,12 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019032157) do
+ActiveRecord::Schema.define(version: 20151018204911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "cube"
-  enable_extension "earthdistance"
+  enable_extension "postgis"
 
   create_table "meeting_groups", force: :cascade do |t|
     t.string   "name"
@@ -25,18 +24,21 @@ ActiveRecord::Schema.define(version: 20151019032157) do
   end
 
   create_table "meeting_locations", force: :cascade do |t|
-    t.string   "name"
-    t.string   "address1"
-    t.string   "address2"
-    t.string   "city"
-    t.string   "state"
-    t.string   "postal_code"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.string   "notes"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string    "name"
+    t.string    "address1"
+    t.string    "address2"
+    t.string    "city"
+    t.string    "state"
+    t.string    "postal_code"
+    t.geography "latlon",      limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.float     "latitude"
+    t.float     "longitude"
+    t.string    "notes"
+    t.datetime  "created_at",                                                           null: false
+    t.datetime  "updated_at",                                                           null: false
   end
+
+  add_index "meeting_locations", ["latlon"], name: "index_meeting_locations_on_latlon", using: :gist
 
   create_table "meetings", force: :cascade do |t|
     t.integer  "meeting_location_id"

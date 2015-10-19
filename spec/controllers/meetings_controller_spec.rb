@@ -21,6 +21,10 @@ require 'rails_helper'
 RSpec.describe MeetingsController, type: :controller do
   render_views
 
+  let(:today) {
+    Weekday.find_by name: Time.zone.now.strftime('%A')
+  }
+
   let(:meeting_location) {create :meeting_location}
   let(:meeting_group)    {create :meeting_group}
   let(:valid_attributes) {
@@ -28,7 +32,7 @@ RSpec.describe MeetingsController, type: :controller do
       meeting_location_id: meeting_location.id,
       name: 'Bleeding Deacons',
       start_time: '16:30',
-      weekday_ids: [Weekday.sunday.id],
+      weekday_ids: [today.id],
       meeting_group_id: meeting_group.id
     }
   }
@@ -36,7 +40,7 @@ RSpec.describe MeetingsController, type: :controller do
     {
       name: 'Bleeding Deacons',
       start_time: '16:30',
-      weekday_ids: [Weekday.sunday.id],
+      weekday_ids: [today.id],
       meeting_group_id: meeting_group.id,
       location_attributes: {
         name: 'A Church',
@@ -45,6 +49,7 @@ RSpec.describe MeetingsController, type: :controller do
         city: 'Brooklyn',
         state: 'NY',
         postal_code: '11249',
+        latlon: "POINT (-73.9526078 40.7158034)",
         notes: 'Blah blah'
       }
     }
@@ -62,12 +67,52 @@ RSpec.describe MeetingsController, type: :controller do
   # MeetingsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe "GET #index" do
-    it "assigns all meetings as @meetings" do
-      meeting = Meeting.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:meetings)).to eq([meeting])
+  RSpec.shared_examples "Index Actions" do
+    describe "GET #[action]" do
+      it "assigns all meetings as @meetings" do
+        get action, params, valid_session
+        aggregate_failures do
+          expect(assigns(:meetings)).to have(1).items
+          expect(assigns(:meetings)).to eq([meeting])
+        end
+      end
     end
+  end
+
+  describe "GET #index" do
+    let(:meeting) {Meeting.create! valid_attributes}
+    before {meeting}
+    let(:action){:index}
+    let(:params){{}}
+    it_behaves_like("Index Actions")
+  end
+
+  describe "Get #search" do
+    let(:latitude) {40.7110184}
+    let(:longitude) {-73.9451092}
+    let(:radius) {5} # Miles
+    let(:action) {:search}
+    let(:params) {{
+      format: :json,
+      search: {
+        latitude: latitude,
+        longitude: longitude,
+        radius: radius
+      }
+    }}
+    let(:meeting) {Meeting.create! valid_attributes_with_location}
+    let(:another_meeting) {
+      attribs = valid_attributes_with_location.clone
+      attribs[:location_attributes][:latlon] = "POINT (73.9526078 40.7158034)" # Far away
+      Meeting.create! attribs
+    }
+    before {meeting; another_meeting}
+    it "has stuff" do
+      aggregate_failures do
+        expect(Meeting.find_near(latitude, longitude, Unit('20 miles'))).not_to be_empty
+      end
+    end
+    it_behaves_like("Index Actions")
   end
 
   describe "GET #show" do

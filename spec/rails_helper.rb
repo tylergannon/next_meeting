@@ -59,13 +59,13 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  DatabaseCleaner.strategy= :deletion, {except: %w(weekdays)}
+  DatabaseCleaner.strategy= :deletion, {except: %w(weekdays spatial_ref_sys)}
+  DatabaseCleaner.clean_with :truncation, {:except => %w[weekdays spatial_ref_sys]}
   config.around(:each) do |example|
     DatabaseCleaner.cleaning do
       example.run
     end
   end
-
   config.before(:suite) do
     Weekday.create name: 'Sunday'
     Weekday.create name: 'Monday'

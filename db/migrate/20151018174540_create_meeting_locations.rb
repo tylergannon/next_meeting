@@ -7,11 +7,13 @@ class CreateMeetingLocations < ActiveRecord::Migration
       t.string :city
       t.string :state
       t.string :postal_code
+      t.st_point :latlon, geographic: true
       t.float :latitude
       t.float :longitude
       t.string :notes
 
       t.timestamps null: false
+      t.index :latlon, using: :gist
     end
   end
 end

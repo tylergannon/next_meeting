@@ -8,4 +8,6 @@ class MeetingDecorator < Draper::Decorator
   def formatted_days
     object.weekdays.human_readable_list
   end
+
+
 end

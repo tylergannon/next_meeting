@@ -9,7 +9,16 @@ class MeetingsController < ApplicationController
   end
 
   def search
-    Meeting.joins(:location).includes(:location)
+    @user_location = [search_params[:latitude], search_params[:longitude]]
+
+    @search_radius = search_params[:radius]
+    @meetings = Meeting.find_near(@user_location[0], @user_location[1], Unit(@search_radius, 'miles')).
+      by_day_of_week(Time.zone.now.strftime('%A')).limit(15).decorate
+    respond_to do |format|
+      format.json do
+        render 'index'
+      end
+    end
   end
 
   # GET /meetings/1
@@ -82,6 +91,10 @@ class MeetingsController < ApplicationController
       else
         params.require(:meeting).permit(:meeting_group_id, :name, :start_time, weekday_ids: [], location_attributes: [:name, :address1, :address2, :city, :state, :postal_code, :notes])
       end
+    end
+
+    def search_params
+      params.require(:search).permit(:latitude, :longitude, :radius, :weekday, :starts_before, :starts_after)
     end
 
     def meeting_location_params
