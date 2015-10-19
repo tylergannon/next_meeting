@@ -6,9 +6,14 @@ console.log(resolveLocation);
 
 @resolveLocation
 export default class NextMeeting extends React.Component {
-  constructor() {
-    super()
-    this.state = {}
+  constructorBar() {
+    
+    if (this.props.location && this.props.location.coords) {
+      this.state = {
+        location: this.props.location,
+        searchNear: 'location'
+      }
+    }
   }
   componentWillMount() {
     if (this.props.location.error) {

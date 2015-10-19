@@ -11,7 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151018204911) do
+ActiveRecord::Schema.define(version: 20151019032157) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "cube"
+  enable_extension "earthdistance"
 
   create_table "meeting_groups", force: :cascade do |t|
     t.string   "name"
@@ -42,16 +47,16 @@ ActiveRecord::Schema.define(version: 20151018204911) do
     t.datetime "updated_at",          null: false
   end
 
-  add_index "meetings", ["meeting_group_id"], name: "index_meetings_on_meeting_group_id"
-  add_index "meetings", ["meeting_location_id"], name: "index_meetings_on_meeting_location_id"
+  add_index "meetings", ["meeting_group_id"], name: "index_meetings_on_meeting_group_id", using: :btree
+  add_index "meetings", ["meeting_location_id"], name: "index_meetings_on_meeting_location_id", using: :btree
 
   create_table "meetings_weekdays", force: :cascade do |t|
     t.integer "meeting_id"
     t.integer "weekday_id"
   end
 
-  add_index "meetings_weekdays", ["meeting_id"], name: "index_meetings_weekdays_on_meeting_id"
-  add_index "meetings_weekdays", ["weekday_id"], name: "index_meetings_weekdays_on_weekday_id"
+  add_index "meetings_weekdays", ["meeting_id"], name: "index_meetings_weekdays_on_meeting_id", using: :btree
+  add_index "meetings_weekdays", ["weekday_id"], name: "index_meetings_weekdays_on_weekday_id", using: :btree
 
   create_table "weekdays", force: :cascade do |t|
     t.string   "name"
@@ -59,4 +64,6 @@ ActiveRecord::Schema.define(version: 20151018204911) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "meetings", "meeting_groups"
+  add_foreign_key "meetings", "meeting_locations"
 end

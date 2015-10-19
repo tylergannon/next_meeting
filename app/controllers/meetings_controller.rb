@@ -8,6 +8,10 @@ class MeetingsController < ApplicationController
     @meetings = Meeting.all
   end
 
+  def search
+    Meeting.joins(:location).includes(:location)
+  end
+
   # GET /meetings/1
   # GET /meetings/1.json
   def show
