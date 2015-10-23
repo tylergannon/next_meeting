@@ -57,8 +57,10 @@ class MeetingsController < ApplicationController
   # PATCH/PUT /meetings/1
   # PATCH/PUT /meetings/1.json
   def update
+    @meeting.attributes = meeting_params
+    @meeting.save
     respond_to do |format|
-      if @meeting.update(meeting_params)
+      if @meeting.valid?
         format.html { redirect_to @meeting, notice: 'Meeting was successfully updated.' }
         format.json { render :show, status: :ok, location: @meeting }
       else
@@ -79,12 +81,10 @@ class MeetingsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_meeting
       @meeting = Meeting.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def meeting_params
       if params[:meeting] && params[:meeting][:meeting_location_id].present?
         params.require(:meeting).permit(:meeting_location_id, :meeting_group_id, :name, :start_time, weekday_ids: [])
@@ -95,10 +95,6 @@ class MeetingsController < ApplicationController
 
     def search_params
       params.require(:search).permit(:latitude, :longitude, :radius, :weekday, :starts_before, :starts_after)
-    end
-
-    def meeting_location_params
-      params[:meeting].require(:location).permit(:name, :address1, :address2, :city, :state, :postal_code, :notes)
     end
 
     def geocode_meeting_location

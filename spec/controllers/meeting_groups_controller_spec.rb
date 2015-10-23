@@ -24,12 +24,14 @@ RSpec.describe MeetingGroupsController, type: :controller do
   # MeetingGroup. As you add validations to MeetingGroup, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {name: 'Support Group'}
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {name: ''}
   }
+
+  let(:meeting_group) {create :meeting_group}
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -38,7 +40,7 @@ RSpec.describe MeetingGroupsController, type: :controller do
 
   describe "GET #index" do
     it "assigns all meeting_groups as @meeting_groups" do
-      meeting_group = MeetingGroup.create! valid_attributes
+      meeting_group
       get :index, {}, valid_session
       expect(assigns(:meeting_groups)).to eq([meeting_group])
     end
@@ -46,7 +48,7 @@ RSpec.describe MeetingGroupsController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested meeting_group as @meeting_group" do
-      meeting_group = MeetingGroup.create! valid_attributes
+
       get :show, {:id => meeting_group.to_param}, valid_session
       expect(assigns(:meeting_group)).to eq(meeting_group)
     end
@@ -61,7 +63,7 @@ RSpec.describe MeetingGroupsController, type: :controller do
 
   describe "GET #edit" do
     it "assigns the requested meeting_group as @meeting_group" do
-      meeting_group = MeetingGroup.create! valid_attributes
+
       get :edit, {:id => meeting_group.to_param}, valid_session
       expect(assigns(:meeting_group)).to eq(meeting_group)
     end
@@ -103,24 +105,24 @@ RSpec.describe MeetingGroupsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {name: 'Another Group'}
       }
 
       it "updates the requested meeting_group" do
-        meeting_group = MeetingGroup.create! valid_attributes
+
         put :update, {:id => meeting_group.to_param, :meeting_group => new_attributes}, valid_session
         meeting_group.reload
-        skip("Add assertions for updated state")
+        expect(meeting_group.name).to eq('Another Group')
       end
 
       it "assigns the requested meeting_group as @meeting_group" do
-        meeting_group = MeetingGroup.create! valid_attributes
+
         put :update, {:id => meeting_group.to_param, :meeting_group => valid_attributes}, valid_session
         expect(assigns(:meeting_group)).to eq(meeting_group)
       end
 
       it "redirects to the meeting_group" do
-        meeting_group = MeetingGroup.create! valid_attributes
+
         put :update, {:id => meeting_group.to_param, :meeting_group => valid_attributes}, valid_session
         expect(response).to redirect_to(meeting_group)
       end
@@ -128,13 +130,13 @@ RSpec.describe MeetingGroupsController, type: :controller do
 
     context "with invalid params" do
       it "assigns the meeting_group as @meeting_group" do
-        meeting_group = MeetingGroup.create! valid_attributes
+
         put :update, {:id => meeting_group.to_param, :meeting_group => invalid_attributes}, valid_session
         expect(assigns(:meeting_group)).to eq(meeting_group)
       end
 
       it "re-renders the 'edit' template" do
-        meeting_group = MeetingGroup.create! valid_attributes
+
         put :update, {:id => meeting_group.to_param, :meeting_group => invalid_attributes}, valid_session
         expect(response).to render_template("edit")
       end
@@ -142,15 +144,16 @@ RSpec.describe MeetingGroupsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
+    before {meeting_group}
     it "destroys the requested meeting_group" do
-      meeting_group = MeetingGroup.create! valid_attributes
+
       expect {
         delete :destroy, {:id => meeting_group.to_param}, valid_session
       }.to change(MeetingGroup, :count).by(-1)
     end
 
     it "redirects to the meeting_groups list" do
-      meeting_group = MeetingGroup.create! valid_attributes
+
       delete :destroy, {:id => meeting_group.to_param}, valid_session
       expect(response).to redirect_to(meeting_groups_url)
     end

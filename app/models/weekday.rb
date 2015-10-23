@@ -1,13 +1,17 @@
 class Weekday < ActiveRecord::Base
   has_and_belongs_to_many :meetings
 
-  class << self
-    def sunday
-      Rails.cache.fetch('Sunday') do
-        find_by(name: 'Sunday')
+  %w(Sunday Monday Tuesday Wednesday Thursday Friday Saturday).each do |day|
+    class_eval "
+    def self.#{day.downcase}
+      Rails.cache.fetch('#{day.downcase}') do
+        find_by(name: '#{day}')
       end
     end
+    "
+  end
 
+  class << self
     def human_readable_list
       days = order(:id).to_a.map(&:name).map(&:pluralize)
       if days.count == 5 && !days.select{|t| ['Saturdays', 'Sundays'].include? t}.any?

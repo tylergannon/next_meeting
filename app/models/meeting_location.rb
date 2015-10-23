@@ -1,6 +1,10 @@
 class MeetingLocation < ActiveRecord::Base
   has_many :meetings
   attr_accessor :result
+  validates :name, presence: true
+  validates :address1, presence: true
+  validates :city, presence: true
+  validates :postal_code, presence: true
 
   def geocoded?
     latitude.present? && longitude.present?
@@ -17,7 +21,7 @@ class MeetingLocation < ActiveRecord::Base
         model.state=         result.state_code
         model.postal_code=   result.postal_code
       else
-        model.update geocoder_error: "Didn't get a properly formatted address: '#{result.address}'"
+        model.errors.add(:latlon, "#{result.address} could not be parsed.")
       end
     end
   end
@@ -78,6 +82,6 @@ class MeetingLocation < ActiveRecord::Base
 
   def self.in_the_same_place_as(another_location)
     where.not(id: another_location.id).
-      where(latitude: another_location.latitude, longitude: another_location.longitude)
+      where(latlon: another_location.latlon)
   end
 end

@@ -1,6 +1,6 @@
 class MeetingLocationsController < ApplicationController
   before_action :set_meeting_location, only: [:show, :edit, :update, :destroy]
-  after_action :geocode_location, only: [:create, :update]
+  after_action :geocode_location, only: [:create, :update], if: :model_valid?
 
   # GET /meeting_locations
   # GET /meeting_locations.json
@@ -71,6 +71,10 @@ class MeetingLocationsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def meeting_location_params
       params.require(:meeting_location).permit(:name, :address1, :address2, :city, :state, :postal_code, :latitude, :longitude, :notes)
+    end
+
+    def model_valid?
+      @meeting_location.valid?
     end
 
     def geocode_location

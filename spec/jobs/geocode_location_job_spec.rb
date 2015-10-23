@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe GeocodeLocationJob, type: :job do
   let(:latitude) {35.22}
   let(:longitude) {-122.35}
-  let(:location){create :meeting_location}
+  let(:location){create :ungeocoded_meeting_location}
   subject{GeocodeLocationJob.new}
   let(:meeting) {create :meeting, location: location}
   describe "when the location is not geocoded" do
@@ -30,9 +30,10 @@ RSpec.describe GeocodeLocationJob, type: :job do
   end
 
   describe "when there is another MeetingLocation at the same lat, lon" do
-    let(:location){create :meeting_location, latitude: latitude, longitude: longitude}
-    let(:another_location) {create :meeting_location, latitude: latitude, longitude: longitude}
-    before {another_location}
+    let(:latlon) {"POINT(#{longitude} #{latitude})"}
+    let(:location){create :meeting_location, latlon: latlon}
+    let(:another_location) {create :meeting_location, latlon: latlon}
+    before {location; another_location}
     it "sets the meetings for this location, to the other, and destroys this one" do
       aggregate_failures do
         expect(meeting.location).to eq(location)

@@ -7,6 +7,8 @@ require 'spec_helper'
 require 'rspec/rails'
 require 'shoulda/matchers'
 require 'database_cleaner'
+require_relative 'support/spec_macros'
+require 'vcr'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -27,39 +29,31 @@ require 'database_cleaner'
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
-  Shoulda::Matchers.configure do |config|
-    config.integrate do |with|
-      # Choose a test framework:
-      with.test_framework :rspec
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    # Choose a test framework:
+    with.test_framework :rspec
 
-      # Choose one or more libraries:
-      with.library :active_record
-      with.library :active_model
-      with.library :action_controller
-      # Or, choose the following (which implies all of the above):
-      with.library :rails
-    end
+    # Choose one or more libraries:
+    with.library :active_record
+    with.library :active_model
+    with.library :action_controller
+    # Or, choose the following (which implies all of the above):
+    with.library :rails
   end
-if ActiveRecord::Base.connection.class.name.demodulize == "SQLite3Adapter"
-  class ActiveRecord::Base
-    mattr_accessor :shared_connection
-    @@shared_connection = nil
-
-    def self.connection
-      @@shared_connection || retrieve_connection
-    end
-  end
-
-  ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 end
 
-
 ActiveRecord::Migration.maintain_test_schema!
+
+VCR.configure do |config|
+  config.cassette_library_dir = "fixtures/vcr_cassettes"
+  config.hook_into :webmock # or :fakeweb
+end
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  DatabaseCleaner.strategy= :deletion, {except: %w(weekdays spatial_ref_sys)}
+  DatabaseCleaner.strategy= :transaction
   DatabaseCleaner.clean_with :truncation, {:except => %w[weekdays spatial_ref_sys]}
   config.around(:each) do |example|
     DatabaseCleaner.cleaning do
@@ -78,5 +72,6 @@ RSpec.configure do |config|
 
   config.use_transactional_fixtures = false
   config.include FactoryGirl::Syntax::Methods
+  config.extend SpecMacros
   config.infer_spec_type_from_file_location!
 end

@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe MeetingLocation, type: :model do
   subject {FactoryGirl.create :meeting_location}
   it {is_expected.to have_many(:meetings)}
+  validates_presence_of! :name, :address1, :city, :postal_code
 
   describe "#complete_address" do
     let(:meeting_location) {FactoryGirl.create :meeting_location,

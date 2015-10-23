@@ -36,6 +36,7 @@ RSpec.describe MeetingsController, type: :controller do
       meeting_group_id: meeting_group.id
     }
   }
+
   let(:valid_attributes_with_location) {
     {
       name: 'Bleeding Deacons',
@@ -62,6 +63,7 @@ RSpec.describe MeetingsController, type: :controller do
     }
   }
 
+  let(:meeting) {Meeting.create! valid_attributes}
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # MeetingsController. Be sure to keep this updated too.
@@ -80,7 +82,6 @@ RSpec.describe MeetingsController, type: :controller do
   end
 
   describe "GET #index" do
-    let(:meeting) {Meeting.create! valid_attributes}
     before {meeting}
     let(:action){:index}
     let(:params){{}}
@@ -184,26 +185,37 @@ RSpec.describe MeetingsController, type: :controller do
   end
 
   describe "PUT #update" do
+    before {meeting}
     context "with valid params" do
+      let(:weekday_ids) { [Weekday.monday, Weekday.tuesday].map &:id }
+      let(:another_location) {create :another_real_place}
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          meeting_location_id: another_location.id,
+          name: 'Another Name',
+          weekday_ids: weekday_ids
+        }
       }
+      let(:do_update) {put :update, {:id => meeting.to_param, :meeting => new_attributes}, valid_session}
 
       it "updates the requested meeting" do
-        meeting = Meeting.create! valid_attributes
-        put :update, {:id => meeting.to_param, :meeting => new_attributes}, valid_session
+        do_update
         meeting.reload
-        skip("Add assertions for updated state")
+        aggregate_failures do
+          expect(response).to be_redirect
+          expect(meeting.weekday_ids).to eq(weekday_ids)
+          expect(meeting.location).to eq(another_location)
+          expect(meeting.name).to eq('Another Name')
+        end
       end
 
       it "assigns the requested meeting as @meeting" do
-        meeting = Meeting.create! valid_attributes
         put :update, {:id => meeting.to_param, :meeting => valid_attributes}, valid_session
         expect(assigns(:meeting)).to eq(meeting)
       end
 
       it "redirects to the meeting" do
-        meeting = Meeting.create! valid_attributes
+
         put :update, {:id => meeting.to_param, :meeting => valid_attributes}, valid_session
         expect(response).to redirect_to(meeting)
       end
@@ -211,13 +223,13 @@ RSpec.describe MeetingsController, type: :controller do
 
     context "with invalid params" do
       it "assigns the meeting as @meeting" do
-        meeting = Meeting.create! valid_attributes
+
         put :update, {:id => meeting.to_param, :meeting => invalid_attributes}, valid_session
         expect(assigns(:meeting)).to eq(meeting)
       end
 
       it "re-renders the 'edit' template" do
-        meeting = Meeting.create! valid_attributes
+
         put :update, {:id => meeting.to_param, :meeting => invalid_attributes}, valid_session
         expect(response).to render_template("edit")
       end
