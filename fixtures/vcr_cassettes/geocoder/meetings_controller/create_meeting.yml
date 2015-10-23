@@ -1,0 +1,102 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=Apt%201,%20Santa%20Rosa,%20CA,%2095403&key=fakekey&language=en&sensor=false
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 23 Oct 2015 18:57:58 GMT
+      Expires:
+      - Sat, 24 Oct 2015 18:57:58 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alternate-Protocol:
+      - 443:quic,p=1
+      Alt-Svc:
+      - quic=":443"; p="1"; ma=604800
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "95403",
+                       "short_name" : "95403",
+                       "types" : [ "postal_code" ]
+                    },
+                    {
+                       "long_name" : "Santa Rosa",
+                       "short_name" : "Santa Rosa",
+                       "types" : [ "locality", "political" ]
+                    },
+                    {
+                       "long_name" : "Sonoma County",
+                       "short_name" : "Sonoma County",
+                       "types" : [ "administrative_area_level_2", "political" ]
+                    },
+                    {
+                       "long_name" : "California",
+                       "short_name" : "CA",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    }
+                 ],
+                 "formatted_address" : "Santa Rosa, CA 95403, USA",
+                 "geometry" : {
+                    "location" : {
+                       "lat" : 38.4836624,
+                       "lng" : -122.7174229
+                    },
+                    "location_type" : "APPROXIMATE",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 38.4850113802915,
+                          "lng" : -122.7160739197085
+                       },
+                       "southwest" : {
+                          "lat" : 38.4823134197085,
+                          "lng" : -122.7187718802915
+                       }
+                    }
+                 },
+                 "place_id" : "ChIJTd0ZMp04hIARVRq5akXgxOw",
+                 "types" : [ "park", "point_of_interest", "establishment" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version:
+  recorded_at: Fri, 23 Oct 2015 18:57:59 GMT
+recorded_with: VCR 2.9.3

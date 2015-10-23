@@ -45,11 +45,6 @@ end
 
 ActiveRecord::Migration.maintain_test_schema!
 
-VCR.configure do |config|
-  config.cassette_library_dir = "fixtures/vcr_cassettes"
-  config.hook_into :webmock # or :fakeweb
-end
-
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -60,6 +55,12 @@ RSpec.configure do |config|
       example.run
     end
   end
+  VCR.configure do |config|
+    config.cassette_library_dir = "fixtures/vcr_cassettes"
+    config.hook_into :webmock # or :fakeweb
+    config.allow_http_connections_when_no_cassette = false
+  end
+
   config.before(:suite) do
     Weekday.create name: 'Sunday'
     Weekday.create name: 'Monday'

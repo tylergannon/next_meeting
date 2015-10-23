@@ -50,7 +50,6 @@ RSpec.describe MeetingsController, type: :controller do
         city: 'Brooklyn',
         state: 'NY',
         postal_code: '11249',
-        latlon: "POINT (-73.9526078 40.7158034)",
         notes: 'Blah blah'
       }
     }
@@ -85,7 +84,13 @@ RSpec.describe MeetingsController, type: :controller do
     before {meeting}
     let(:action){:index}
     let(:params){{}}
-    it_behaves_like("Index Actions")
+    it "sets the meetings as an instance var" do
+      get action, params, valid_session
+      aggregate_failures do
+        expect(assigns(:meetings)).to have(1).items
+        expect(assigns(:meetings)).to eq([meeting])
+      end
+    end
   end
 
   describe "Get #search" do
@@ -101,19 +106,22 @@ RSpec.describe MeetingsController, type: :controller do
         radius: radius
       }
     }}
-    let(:meeting) {Meeting.create! valid_attributes_with_location}
-    let(:another_meeting) {
-      attribs = valid_attributes_with_location.clone
-      attribs[:location_attributes][:latlon] = "POINT (73.9526078 40.7158034)" # Far away
-      Meeting.create! attribs
-    }
+    let(:meeting) {create :meeting, location: create(:meeting_location, latitude: latitude, longitude: longitude), weekdays: Weekday.all}
+    let(:another_meeting) {create :meeting, location: create(:meeting_location, latitude: 73, longitude: 40), weekdays: Weekday.all}
     before {meeting; another_meeting}
     it "has stuff" do
       aggregate_failures do
         expect(Meeting.find_near(latitude, longitude, Unit('20 miles'))).not_to be_empty
       end
     end
-    it_behaves_like("Index Actions")
+    it "sets the meetings as an instance var" do
+      get action, params, valid_session
+      expected_meetings = Draper::CollectionDecorator.decorate [meeting]
+      aggregate_failures do
+        expect(assigns(:meetings)).to have(1).items
+        expect(assigns(:meetings)).to eq(expected_meetings)
+      end
+    end
   end
 
   describe "GET #show" do
@@ -143,20 +151,23 @@ RSpec.describe MeetingsController, type: :controller do
     describe "POST #create" do
       context "with valid params" do
         context "when meeting location was selected from list" do
-          it "creates a new Meeting" do
-            expect {
+          let(:do_request) {
+            VCR.use_cassette 'geocoder/meetings_controller/Meeting Creation' do
               post :create, {:meeting => valid_attributes}, valid_session
-            }.to change(Meeting, :count).by(1)
+            end
+          }
+          it "creates a new Meeting" do
+            expect {do_request}.to change(Meeting, :count).by(1)
           end
 
           it "assigns a newly created meeting as @meeting" do
-            post :create, {:meeting => valid_attributes}, valid_session
+            do_request
             expect(assigns(:meeting)).to be_a(Meeting)
             expect(assigns(:meeting)).to be_persisted
           end
 
           it "redirects to the created meeting" do
-            post :create, {:meeting => valid_attributes}, valid_session
+            do_request
             expect(response).to redirect_to(Meeting.last)
           end
         end

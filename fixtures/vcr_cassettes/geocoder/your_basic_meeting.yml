@@ -1,0 +1,117 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=2129%20Crosspoint%20Ave,%20Santa%20Rosa,%20CA,%2095403&key=fakekey&language=en&sensor=false
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 23 Oct 2015 18:55:49 GMT
+      Expires:
+      - Sat, 24 Oct 2015 18:55:49 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alternate-Protocol:
+      - 443:quic,p=1
+      Alt-Svc:
+      - quic=":443"; p="1"; ma=604800
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "2129",
+                       "short_name" : "2129",
+                       "types" : [ "street_number" ]
+                    },
+                    {
+                       "long_name" : "Crosspoint Avenue",
+                       "short_name" : "Crosspoint Ave",
+                       "types" : [ "route" ]
+                    },
+                    {
+                       "long_name" : "Santa Rosa",
+                       "short_name" : "Santa Rosa",
+                       "types" : [ "locality", "political" ]
+                    },
+                    {
+                       "long_name" : "Sonoma County",
+                       "short_name" : "Sonoma County",
+                       "types" : [ "administrative_area_level_2", "political" ]
+                    },
+                    {
+                       "long_name" : "California",
+                       "short_name" : "CA",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    },
+                    {
+                       "long_name" : "95403",
+                       "short_name" : "95403",
+                       "types" : [ "postal_code" ]
+                    },
+                    {
+                       "long_name" : "7932",
+                       "short_name" : "7932",
+                       "types" : [ "postal_code_suffix" ]
+                    }
+                 ],
+                 "formatted_address" : "2129 Crosspoint Ave, Santa Rosa, CA 95403, USA",
+                 "geometry" : {
+                    "location" : {
+                       "lat" : 38.455411,
+                       "lng" : -122.755528
+                    },
+                    "location_type" : "ROOFTOP",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 38.45675998029149,
+                          "lng" : -122.7541790197085
+                       },
+                       "southwest" : {
+                          "lat" : 38.45406201970849,
+                          "lng" : -122.7568769802915
+                       }
+                    }
+                 },
+                 "place_id" : "ChIJFRBht1E4hIARL8O4b66B1Bg",
+                 "types" : [ "street_address" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version:
+  recorded_at: Fri, 23 Oct 2015 18:55:50 GMT
+recorded_with: VCR 2.9.3

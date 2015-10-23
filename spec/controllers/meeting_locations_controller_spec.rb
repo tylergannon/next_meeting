@@ -59,18 +59,24 @@ RSpec.describe MeetingLocationsController, type: :controller do
     context "with valid params" do
       it "creates a new MeetingLocation" do
         expect {
-          post :create, {:meeting_location => valid_attributes}, valid_session
+          VCR.use_cassette 'geocoder/meetings_controller/create meeting' do
+            post :create, {:meeting_location => valid_attributes}, valid_session
+          end
         }.to change(MeetingLocation, :count).by(1)
       end
 
       it "assigns a newly created meeting_location as @meeting_location" do
-        post :create, {:meeting_location => valid_attributes}, valid_session
+        VCR.use_cassette 'geocoder/meetings_controller/create meeting' do
+          post :create, {:meeting_location => valid_attributes}, valid_session
+        end
         expect(assigns(:meeting_location)).to be_a(MeetingLocation)
         expect(assigns(:meeting_location)).to be_persisted
       end
 
       it "redirects to the created meeting_location" do
-        post :create, {:meeting_location => valid_attributes}, valid_session
+        VCR.use_cassette 'geocoder/meetings_controller/create meeting' do
+          post :create, {:meeting_location => valid_attributes}, valid_session
+        end
         expect(response).to redirect_to(MeetingLocation.last)
       end
     end

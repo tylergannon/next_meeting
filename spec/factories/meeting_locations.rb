@@ -9,6 +9,17 @@ FactoryGirl.define do
     notes "MyString"
     latlon "POINT (-122.755528 38.455411)"
 
+    transient do
+      latitude nil
+      longitude nil
+    end
+
+    after :create do |model, evaluator|
+      if evaluator.latitude
+        model.update latlon: "POINT(#{evaluator.longitude} #{evaluator.latitude})"
+      end
+    end
+
     factory :ungeocoded_meeting_location do
       latlon nil
     end

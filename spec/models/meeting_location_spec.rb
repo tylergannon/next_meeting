@@ -15,6 +15,16 @@ RSpec.describe MeetingLocation, type: :model do
     it {is_expected.to eq('2129 Crosspoint Ave Apt 23, Santa Rosa, CA, 95403')}
   end
 
+  describe "geocode" do
+    let(:meeting_location) {create :ungeocoded_meeting_location}
+    it "does shis" do
+      VCR.use_cassette 'geocoder/your basic meeting' do
+        meeting_location.geocode
+      end
+    end
+  end
+
+
   describe "#geocode!" do
     it "calls #geocode and then saves" do
       aggregate_failures do

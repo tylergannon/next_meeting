@@ -1,0 +1,8 @@
+
+test:
+  adapter: postgis
+  pool: 5
+  timeout: 5000
+  user: postgres
+  database: travis_ci_test
+

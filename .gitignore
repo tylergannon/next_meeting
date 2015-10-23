@@ -19,3 +19,5 @@
 
 
 app/assets/javascripts/react_bundle.js
+
+.env.test

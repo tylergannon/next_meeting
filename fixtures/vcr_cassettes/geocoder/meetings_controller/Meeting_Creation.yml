@@ -1,0 +1,122 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=123%20N.%208th%20St%20Apt%201,%20Brooklyn,%20NY,%2011249&key=fakekey&language=en&sensor=false
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 23 Oct 2015 19:19:22 GMT
+      Expires:
+      - Sat, 24 Oct 2015 19:19:22 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alternate-Protocol:
+      - 443:quic,p=1
+      Alt-Svc:
+      - quic=":443"; p="1"; ma=604800
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "1",
+                       "short_name" : "1",
+                       "types" : [ "subpremise" ]
+                    },
+                    {
+                       "long_name" : "123",
+                       "short_name" : "123",
+                       "types" : [ "street_number" ]
+                    },
+                    {
+                       "long_name" : "North 8th Street",
+                       "short_name" : "N 8th St",
+                       "types" : [ "route" ]
+                    },
+                    {
+                       "long_name" : "Williamsburg",
+                       "short_name" : "Williamsburg",
+                       "types" : [ "neighborhood", "political" ]
+                    },
+                    {
+                       "long_name" : "Brooklyn",
+                       "short_name" : "Brooklyn",
+                       "types" : [ "sublocality_level_1", "sublocality", "political" ]
+                    },
+                    {
+                       "long_name" : "Kings County",
+                       "short_name" : "Kings County",
+                       "types" : [ "administrative_area_level_2", "political" ]
+                    },
+                    {
+                       "long_name" : "New York",
+                       "short_name" : "NY",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    },
+                    {
+                       "long_name" : "11249",
+                       "short_name" : "11249",
+                       "types" : [ "postal_code" ]
+                    }
+                 ],
+                 "formatted_address" : "123 N 8th St #1, Brooklyn, NY 11249, USA",
+                 "geometry" : {
+                    "location" : {
+                       "lat" : 40.7192207,
+                       "lng" : -73.95843870000002
+                    },
+                    "location_type" : "ROOFTOP",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 40.7205696802915,
+                          "lng" : -73.95708971970852
+                       },
+                       "southwest" : {
+                          "lat" : 40.7178717197085,
+                          "lng" : -73.95978768029153
+                       }
+                    }
+                 },
+                 "place_id" : "EigxMjMgTiA4dGggU3QgIzEsIEJyb29rbHluLCBOWSAxMTI0OSwgVVNB",
+                 "types" : [ "subpremise" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version:
+  recorded_at: Fri, 23 Oct 2015 19:19:23 GMT
+recorded_with: VCR 2.9.3
