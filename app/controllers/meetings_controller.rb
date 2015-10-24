@@ -9,11 +9,15 @@ class MeetingsController < ApplicationController
   end
 
   def search
-    @user_location = [search_params[:latitude], search_params[:longitude]]
+    @meetings = Meeting.all
+    if search_params[:latitude] && search_params[:longitude]
+      @user_location = [search_params[:latitude], search_params[:longitude]]
 
-    @search_radius = search_params[:radius] || 10
-    @meetings = Meeting.find_near(@user_location[0], @user_location[1], Unit(@search_radius, 'miles')).
-      by_day_of_week(Time.zone.now.strftime('%A')).limit(15).decorate
+      @search_radius = search_params[:radius] || 10
+      @meetings = Meeting.find_near(@user_location[0], @user_location[1], Unit(@search_radius, 'miles')).
+        by_day_of_week(Time.zone.now.strftime('%A')).limit(15).decorate
+    end
+
     respond_to do |format|
       format.json do
         render 'index'
