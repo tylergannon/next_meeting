@@ -11,7 +11,7 @@ class MeetingsController < ApplicationController
   def search
     @user_location = [search_params[:latitude], search_params[:longitude]]
 
-    @search_radius = search_params[:radius]
+    @search_radius = search_params[:radius] || 10
     @meetings = Meeting.find_near(@user_location[0], @user_location[1], Unit(@search_radius, 'miles')).
       by_day_of_week(Time.zone.now.strftime('%A')).limit(15).decorate
     respond_to do |format|
@@ -94,7 +94,7 @@ class MeetingsController < ApplicationController
     end
 
     def search_params
-      params.require(:search).permit(:latitude, :longitude, :radius, :weekday, :starts_before, :starts_after)
+      params.permit(:latitude, :longitude, :radius, :weekday, :starts_before, :starts_after)
     end
 
     def geocode_meeting_location

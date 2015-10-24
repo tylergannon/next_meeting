@@ -1,19 +1,47 @@
 import React from 'react';
 import { resolve } from 'react-resolver';
 import resolveLocation from '../decorators/resolve_location'
-
+import Http from '../utils/http'
+import querystring from 'querystring';
+import { Well, ListGroup, ListGroupItem } from 'react-bootstrap';
+window.querystring = querystring;
 
 @resolveLocation
-export default class NextMeeting extends React.Component {
-  componentWillMount() {
-    if (this.props.location.error) {
-      this.setState({message: this.props.location.error})
-    } else {
-      this.setState({message: `Your location is: ${this.props.location.coords.latitude}, ${this.props.location.coords.longitude}`})
+@resolve("meetings", function(props) {
+  var params = {}
+  if (props.location.coords) {
+    params = {
+      latitude: props.location.coords.latitude,
+      longitude: props.location.coords.longitude
     }
   }
-  render() {
-    return <div>Next Meeting! {this.state.message}</div>;
 
+  return new Promise((resolve, reject) => {
+    fetch(`/meetings/search.json?${querystring.stringify(params)}`).then(
+      function(response) {
+        if (response.status != 200) {
+          reject()
+        } else {
+          response.json().then(function(data) {
+            resolve(data)
+          })
+        }
+      }
+    );
+  });
+})
+export default class NextMeeting extends React.Component {
+
+  render() {
+    return (
+    <Well>
+      <ListGroup>
+        {this.props.meetings.map(function(meeting) {
+          return(<ListGroupItem key={meeting.id}>
+            { meeting.name }
+          </ListGroupItem>);
+        })}
+      </ListGroup>
+    </Well>);
   }
 }
