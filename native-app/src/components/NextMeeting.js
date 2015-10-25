@@ -1,9 +1,7 @@
 'use strict';
 
 import React from 'react-native';
-// import DocSection from './DocSection';
 import meetingData from '../data/meetings';
-import Transmit from 'react-transmit';
 import MeetingInfo from './MeetingInfo';
 
 const {
@@ -15,30 +13,55 @@ const {
   View,
 } = React;
 
-class NextMeeting extends React.Component {
-  componentWillMount() {
-    const meetings = meetingData;
-    // const foobaz   = this.props.meetings;
+export default class NextMeeting extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      meetings: [],
+      dataSource: null
+    }
+  }
 
-    var ids = meetings.map(meeting => meeting.id);
-
+  updateDataSource(meetings) {
     var dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
       getRowData: (data, sectionID, rowId) =>
         meetings[rowId]
     }).cloneWithRows(meetings);
 
-    this.setState({dataSource: dataSource});
+    this.setState({
+      dataSource: dataSource,
+      meetings: meetings
+    });
   }
-  render() {
 
-    return (
-      <ListView
-        style={styles.container}
-        dataSource={this.state.dataSource}
-        renderRow={row => this.renderRow(row)}
-      />
-    );
+  componentWillMount() {
+    const url = 'http://localhost:3000/meetings/search.json?latitude=40.7189962&longitude=-73.9629884'
+    fetch(url)
+      .then(function(response) {
+        return response.json();
+      }).then((meetings) => {
+        this.updateDataSource(meetings);
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+  }
+
+  render() {
+    if (this.state.dataSource) {
+      return (
+        <ListView
+          style={styles.container}
+          dataSource={this.state.dataSource}
+          renderRow={row => this.renderRow(row)}
+        />
+      );
+    } else {
+      return(<View>
+             <Text>Loading</Text>
+             </View>);
+    }
   }
 
   renderRow(row) {
@@ -66,16 +89,6 @@ class NextMeeting extends React.Component {
     });
   }
 }
-
-export default Transmit.createContainer(NextMeeting, {
-  fragments: {
-    meetings () {
-      var url = 'http://localhost:3000/meetings/search.json?latitude=40.7189962&longitude=-73.9629884'
-      return fetch(url).then((res) => res.json());
-      // return meetingData;
-    }
-  }
-});
 
 const styles = StyleSheet.create({
   container: {
