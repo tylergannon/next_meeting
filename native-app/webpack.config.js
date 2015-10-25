@@ -26,6 +26,10 @@ var config = {
         stage: 0,
         plugins: []
       }
+    }, {
+      test: /\.js?$/,
+      include: /react-native-button/,
+      loader: 'babel'
     }]
   },
 

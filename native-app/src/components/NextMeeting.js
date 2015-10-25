@@ -3,6 +3,7 @@
 import React from 'react-native';
 import meetingData from '../data/meetings';
 import MeetingInfo from './MeetingInfo';
+import Button from 'react-native-button';
 
 const {
   ListView,
@@ -49,6 +50,24 @@ export default class NextMeeting extends React.Component {
   }
 
   render() {
+    return (
+    <View style={{position: 'absolute', flex: 1, marginTop: (128/PixelRatio.get())}}>
+      { this.renderHeader() }
+      { this.renderMeetingResults() }
+
+    </View>
+    );
+  }
+
+  renderHeader() {
+    return(
+      <View style={styles.toolbar}>
+        <Button style={styles.toolbarButton}>Filter</Button>
+      </View>
+    );
+  }
+
+  renderMeetingResults() {
     if (this.state.dataSource) {
       return (
         <ListView
@@ -93,6 +112,7 @@ export default class NextMeeting extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative'
   },
   sectionHeader: {
     paddingTop: 6,
@@ -122,4 +142,21 @@ const styles = StyleSheet.create({
     height: 1 / PixelRatio.get(),
     backgroundColor: '#ddd',
   },
+    toolbar:{
+        backgroundColor:'red',
+        paddingTop:10,
+        paddingBottom:10,
+        flexDirection:'row'    //Step 1
+    },
+    toolbarButton:{
+        width: 50,            //Step 2
+        color:'#000',
+        textAlign:'center'
+    },
+    toolbarTitle:{
+        color:'#fff',
+        textAlign:'center',
+        fontWeight:'bold',
+        flex:1                //Step 3
+    }
 });
