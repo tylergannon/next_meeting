@@ -1,21 +1,21 @@
 source 'https://rubygems.org'
 
+gem 'activerecord-postgis-adapter'
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'carmen'
 gem 'chosen-rails'
 gem 'coffee-rails', '~> 4.1.0'
-gem "compass-rails", github: "Compass/compass-rails", branch: "master"
+gem 'compass-rails', github: "Compass/compass-rails", branch: "master"
 gem 'dalli'
 gem 'devise'
 gem 'draper'
-gem 'with_advisory_lock'
 gem 'geocoder'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'kgio'
 gem 'pg'
-gem 'activerecord-postgis-adapter'
 gem 'puma'
+gem 'rack-cors'
 gem 'rails', '4.2.4'
 gem 'react_webpack_rails'
 gem 'ruby-units'
@@ -28,6 +28,7 @@ gem 'therubyracer'
 gem 'turbolinks'
 gem 'twitter-bootstrap-rails'
 gem 'uglifier', '>= 1.3.0'
+gem 'with_advisory_lock'
 
 group :development, :test do
   gem 'byebug'

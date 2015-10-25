@@ -9,13 +9,18 @@ class MeetingsController < ApplicationController
   end
 
   def search
-    @meetings = Meeting.all
-    if search_params[:latitude] && search_params[:longitude]
-      @user_location = [search_params[:latitude], search_params[:longitude]]
+    @user_location = [search_params[:latitude], search_params[:longitude]]
+    @meetings = Meeting.limit(5).decorate
+    if false && search_params[:latitude] && search_params[:longitude]
 
       @search_radius = search_params[:radius] || 10
       @meetings = Meeting.find_near(@user_location[0], @user_location[1], Unit(@search_radius, 'miles')).
         by_day_of_week(Time.zone.now.strftime('%A')).limit(15).decorate
+      if @meetings.empty?
+        @meetings = Meeting.find_near(@user_location[0], @user_location[1], Unit(@search_radius, 'miles')).
+          limit(5).decorate
+      end
+      puts @meetings.count
     end
 
     respond_to do |format|

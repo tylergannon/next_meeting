@@ -15,21 +15,23 @@ const {
   View,
 } = React;
 
-export default class NextMeeting extends React.Component {
-  constructor() {
-    super();
-  }
+class NextMeeting extends React.Component {
   componentWillMount() {
-    var ids = meetingData.map(meeting => meeting.id);
+    const meetings = meetingData;
+    // const foobaz   = this.props.meetings;
+
+    var ids = meetings.map(meeting => meeting.id);
+
     var dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
       getRowData: (data, sectionID, rowId) =>
-        meetingData[rowId]
-    }).cloneWithRows(meetingData);
+        meetings[rowId]
+    }).cloneWithRows(meetings);
+
     this.setState({dataSource: dataSource});
   }
-
   render() {
+
     return (
       <ListView
         style={styles.container}
@@ -65,14 +67,12 @@ export default class NextMeeting extends React.Component {
   }
 }
 
-Transmit.createContainer(NextMeeting, {
-  initVariables: {
-    count: 10
-  },
+export default Transmit.createContainer(NextMeeting, {
   fragments: {
-    stories () {
-      url = 'http://localhost:3000/meetings/search.json?latitude=40.7189962&longitude=-73.9629884'
+    meetings () {
+      var url = 'http://localhost:3000/meetings/search.json?latitude=40.7189962&longitude=-73.9629884'
       return fetch(url).then((res) => res.json());
+      // return meetingData;
     }
   }
 });
