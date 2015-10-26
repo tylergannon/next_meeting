@@ -5,6 +5,7 @@ import meetingData from '../data/meetings';
 import MeetingInfo from './MeetingInfo';
 import SearchModal from './search/SearchModal';
 import Button from 'react-native-button';
+import querystring from 'querystring';
 
 const {
   ListView,
@@ -12,59 +13,27 @@ const {
   StyleSheet,
   Text,
   TouchableHighlight,
+  TextInput,
   View,
 } = React;
 
 export default class NextMeeting extends React.Component {
   constructor() {
-    super()
+    super();
+    this.baseUrl = "http://localhost:3000/meetings/search.json";
+    this._searchParamsChanged = this._searchParamsChanged.bind(this);
+    this._loadData            = this._loadData.bind(this);
     this.state = {
       meetings: [],
       dataSource: null
-    }
-  }
-
-  updateDataSource(meetings) {
-    var dataSource = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-      getRowData: (data, sectionID, rowId) =>
-        meetings[rowId]
-    }).cloneWithRows(meetings);
-
-    this.setState({
-      dataSource: dataSource,
-      meetings: meetings
-    });
-  }
-
-  componentWillMount() {
-    const url = 'http://localhost:3000/meetings/search.json?latitude=40.7189962&longitude=-73.9629884'
-    fetch(url)
-      .then(function(response) {
-        return response.json();
-      }).then((meetings) => {
-        this.updateDataSource(meetings);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+    };
   }
 
   render() {
     return (
-    <View style={{position: 'absolute', flex: 1, marginTop: (128/PixelRatio.get())}}>
-      <SearchModal />
-      { this.renderHeader() }
-      { this.renderMeetingResults() }
-
-    </View>
-    );
-  }
-
-  renderHeader() {
-    return(
-      <View style={styles.toolbar}>
-        <Button style={styles.toolbarButton}>Filter</Button>
+      <View style={{position: 'absolute', flex: 1, marginTop: (128/PixelRatio.get())}}>
+        <SearchModal onChange={this._searchParamsChanged} />
+        { this.renderMeetingResults() }
       </View>
     );
   }
@@ -108,6 +77,41 @@ export default class NextMeeting extends React.Component {
       component: MeetingInfo,
       passProps: {meeting},
     });
+  }
+
+  _updateDataSource(meetings) {
+    var dataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+      getRowData: (data, sectionID, rowId) =>
+        meetings[rowId]
+    }).cloneWithRows(meetings);
+
+    this.setState({
+      dataSource: dataSource,
+      meetings: meetings
+    });
+  }
+
+  _loadData(params) {
+    if (!params.latitude) {
+      return;
+    }
+
+    var url = `${this.baseUrl}?${querystring.stringify(params)}`
+
+    fetch(url)
+      .then(function(response) {
+        return response.json();
+      }).then((meetings) => {
+        this._updateDataSource(meetings);
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+  }
+
+  _searchParamsChanged(params) {
+    this._loadData(params);
   }
 }
 
