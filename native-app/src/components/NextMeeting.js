@@ -3,6 +3,7 @@
 import React from 'react-native';
 import meetingData from '../data/meetings';
 import MeetingInfo from './MeetingInfo';
+import SearchModal from './search/SearchModal';
 import Button from 'react-native-button';
 
 const {
@@ -52,6 +53,7 @@ export default class NextMeeting extends React.Component {
   render() {
     return (
     <View style={{position: 'absolute', flex: 1, marginTop: (128/PixelRatio.get())}}>
+      <SearchModal />
       { this.renderHeader() }
       { this.renderMeetingResults() }
 
